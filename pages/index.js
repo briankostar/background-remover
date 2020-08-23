@@ -3,6 +3,11 @@ import styles from "../styles/Home.module.css";
 import axios from "axios";
 
 export default function Home() {
+  console.log(
+    "process.env.NEXT_PUBLIC_API_URL,",
+    process.env.NEXT_PUBLIC_API_URL
+  );
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const uploadedImage = React.useRef(null);
 
   const handleImageUpload = (e) => {
@@ -18,9 +23,12 @@ export default function Home() {
       console.log("reader", reader);
       console.log("file", file);
 
-      axios.post("https://some-lambdaapi.com/remove-bg", file, {
+      const formData = new FormData();
+      formData.append("file", file);
+      axios.post(apiUrl, formData, {
         headers: {
-          "Content-Type": file.type,
+          // "Content-Type": file.type,
+          "content-type": "multipart/form-data",
         },
       });
     }
@@ -37,7 +45,7 @@ export default function Home() {
         <h1 className={styles.title}>Easily remove backgrounds using AI</h1>
 
         <div>
-          {/* <form action="https://some-lambdaapi.com/remove-bg" method="post"> */}
+          {/* <form action={apiUrl} method="post"> */}
           <div>
             <input type="file" accept="image/*" onChange={handleImageUpload} />
           </div>
