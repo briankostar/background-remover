@@ -1,5 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import axios from "axios";
 
 export default function Home() {
   const uploadedImage = React.useRef(null);
@@ -14,6 +15,14 @@ export default function Home() {
         current.src = e.target.result;
       };
       reader.readAsDataURL(file);
+      console.log("reader", reader);
+      console.log("file", file);
+
+      axios.post("https://some-lambdaapi.com/remove-bg", file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
     }
   };
 
@@ -25,13 +34,18 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h2 className={styles.title}>Easily remove backgrounds using AI</h2>
+        <h1 className={styles.title}>Easily remove backgrounds using AI</h1>
 
         <div>
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-        </div>
-        <div>
-          <img ref={uploadedImage} />
+          {/* <form action="https://some-lambdaapi.com/remove-bg" method="post"> */}
+          <div>
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+          </div>
+          <div>
+            <img ref={uploadedImage} />
+          </div>
+          {/* <input type="submit" />
+          </form> */}
         </div>
       </main>
     </div>
